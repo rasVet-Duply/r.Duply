@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function memberPath() { return /databases/$(database)/documents/members/$(request.auth.uid); }
+    function isMember(f) { return signedIn() && exists(memberPath()) && get(memberPath()).data.farmId == f; }
+    function isDir(f) { return isMember(f) && get(memberPath()).data.role == 'Direktor'; }
+    // state after the current batch (used when creating a farm in one batch)
+    function dirAfter(f) {
+      return signedIn() && getAfter(memberPath()).data.farmId == f && getAfter(memberPath()).data.role == 'Direktor';
+    }
+
+    match /farms/{f} {
+      allow read: if isMember(f);
+      allow create: if signedIn() && request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDir(f) && request.resource.data.ownerUid == resource.data.ownerUid;
+    }
+    match /farmSecrets/{f} {
+      allow read: if isDir(f);
+      allow write: if dirAfter(f);
+    }
+    match /invites/{code} {
+      allow get: if signedIn();
+      allow create: if dirAfter(request.resource.data.farmId);
+      allow delete: if isDir(resource.data.farmId);
+    }
+    match /members/{uid} {
+      allow read: if isMember(resource.data.farmId);
+      allow create: if signedIn() && request.auth.uid == uid && (
+        (request.resource.data.role == 'Direktor'
+          && getAfter(/databases/$(database)/documents/farms/$(request.resource.data.farmId)).data.ownerUid == uid)
+        || (request.resource.data.role == 'Xodim'
+          && get(/databases/$(database)/documents/invites/$(request.resource.data.inviteCode)).data.farmId == request.resource.data.farmId));
+      allow update: if request.resource.data.farmId == resource.data.farmId && request.resource.data.role == resource.data.role && (
+        isDir(resource.data.farmId)
+        || (request.auth.uid == uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName'])));
+      allow delete: if isDir(resource.data.farmId) && uid != request.auth.uid;
+    }
+    match /salaries/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isDir(resource.data.farmId));
+      allow write: if isDir(request.resource.data.farmId);
+      allow delete: if isDir(resource.data.farmId);
+    }
+    match /salaryPayments/{id} {
+      allow read: if isDir(resource.data.farmId)
+        || (isMember(resource.data.farmId) && resource.data.memberId == request.auth.uid);
+      allow create: if isDir(request.resource.data.farmId);
+      allow delete: if isDir(resource.data.farmId);
+    }
+    match /finance/{id} {
+      allow read, delete: if isDir(resource.data.farmId);
+      allow create: if isDir(request.resource.data.farmId);
+      allow update: if isDir(resource.data.farmId) && request.resource.data.farmId == resource.data.farmId;
+    }
+    match /{col}/{id} {
+      allow read, delete: if col in ['animals', 'production', 'waste'] && isMember(resource.data.farmId);
+      allow create: if col in ['animals', 'production', 'waste'] && isMember(request.resource.data.farmId);
+      allow update: if col in ['animals', 'production', 'waste'] && isMember(resource.data.farmId)
+        && request.resource.data.farmId == resource.data.farmId;
+    }
+  }
+}

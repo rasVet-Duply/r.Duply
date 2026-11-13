@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", "lib": ["ES2020", "DOM", "DOM.Iterable"], "module": "ESNext",
+    "moduleResolution": "bundler", "jsx": "react-jsx", "skipLibCheck": true, "noEmit": true,
+    "strict": false, "strictNullChecks": true, "isolatedModules": true, "allowImportingTsExtensions": true,
+    "types": ["vite/client"],
+    "paths": {
+      "@project/components/*": ["./src/shared/*"],
+      "zitejs/api": ["./src/backend/api.ts"],
+      "zitejs/auth": ["./src/backend/auth.tsx"],
+      "zitejs/upload": ["./src/backend/upload.ts"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

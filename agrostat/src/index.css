@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Auto-restored theme variables */
+    --shadow-x: 0px;
+    --shadow-y: 1px;
+    --shadow-blur: 4px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.2;
+    --shadow-color: #000000;
+    --shadow-2xs: var(--shadow-x) var(--shadow-y) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+    --shadow-xs: var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-spread) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+    --shadow-xl: calc(var(--shadow-x) * 6) calc(var(--shadow-y) * 6) calc(var(--shadow-blur) * 7) calc(var(--shadow-spread) - 5px) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+    --shadow-2xl: calc(var(--shadow-x) * 8) calc(var(--shadow-y) * 8) calc(max(0px, var(--shadow-blur) * 9 - 8px)) calc(var(--shadow-spread) - 12px) color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 250%), transparent);
+
+    --forest: 150 38% 9%;
+    --forest-2: 150 30% 14%;
+    --background: 90 20% 95%;
+    --foreground: 150 30% 10%;
+    --muted: 90 15% 88%;
+    --muted-foreground: 150 10% 35%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 30% 10%;
+    --border: 150 15% 80%;
+    --input: 150 15% 78%;
+    --card: 0 0% 100%;
+    --card-foreground: 150 30% 10%;
+    --primary: 148 50% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 90 15% 90%;
+    --secondary-foreground: 150 30% 10%;
+    --accent: 52 92% 55%;
+    --accent-foreground: 150 40% 8%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 148 50% 32%;
+    --radius: 0.9rem;
+    --glass: 0 0% 100%;
+    --glass-alpha: 0.42;
+    --scrim: 150 30% 8%;
+    --scrim-alpha: 0.18;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 150 30% 12%;
+    --sidebar-primary: 52 92% 55%;
+    --sidebar-primary-foreground: 150 40% 8%;
+    --sidebar-accent: 90 20% 90%;
+    --sidebar-accent-foreground: 150 30% 10%;
+    --sidebar-border: 150 15% 82%;
+    --sidebar-ring: 52 92% 55%;
+    --chart-1: 45 95% 50%;
+    --chart-2: 148 55% 38%;
+    --chart-3: 190 60% 42%;
+    --chart-4: 18 80% 55%;
+    --chart-5: 95 45% 45%;
+    --font-sans: 'Manrope', system-ui, sans-serif;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.12);
+    --shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+    --shadow-md: 0 6px 18px rgb(0 0 0 / 0.2);
+    --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.25);
+  }
+
+  .dark {
+    --background: 150 30% 3%;
+    --foreground: 60 20% 96%;
+    --muted: 150 20% 10%;
+    --muted-foreground: 140 8% 72%;
+    --popover: 150 25% 7%;
+    --popover-foreground: 60 20% 96%;
+    --border: 150 12% 20%;
+    --input: 150 12% 24%;
+    --card: 150 20% 6%;
+    --card-foreground: 60 20% 96%;
+    --primary: 148 50% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 150 15% 12%;
+    --secondary-foreground: 60 20% 96%;
+    --accent: 52 92% 55%;
+    --accent-foreground: 150 40% 8%;
+    --destructive: 0 80% 65%;
+    --destructive-foreground: 0 63% 10%;
+    --ring: 52 92% 55%;
+    --glass: 150 22% 5%;
+    --glass-alpha: 0.62;
+    --scrim: 150 35% 2%;
+    --scrim-alpha: 0.8;
+    --sidebar-background: 150 20% 7%;
+    --sidebar-foreground: 60 15% 90%;
+    --sidebar-primary: 52 92% 55%;
+    --sidebar-primary-foreground: 150 40% 8%;
+    --sidebar-accent: 150 15% 15%;
+    --sidebar-accent-foreground: 60 20% 96%;
+    --sidebar-border: 150 12% 18%;
+    --sidebar-ring: 52 92% 55%;
+  }
+}
+
+@layer components {
+  .glass {
+    background: hsl(var(--glass) / var(--glass-alpha));
+    @apply rounded-3xl border border-white/30 shadow-lg backdrop-blur-md md:backdrop-blur-2xl;
+  }
+  .dark .glass { @apply border-border; }
+  [role='dialog'], [role='alertdialog'] {
+    background: hsl(var(--glass) / calc(var(--glass-alpha) + 0.25)) !important;
+    @apply backdrop-blur-2xl backdrop-saturate-150;
+  }
+  [role='listbox'], [data-radix-popper-content-wrapper] > div {
+    background: hsl(var(--glass) / 0.85) !important;
+    @apply backdrop-blur-xl;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-size: 15px;
+    transition: background-color 0.4s, color 0.4s;
+  }
+}

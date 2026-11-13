@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.local
+.firebase
+migration/serviceAccount.json
+migration/agrostat-data.json
+migration/node_modules
